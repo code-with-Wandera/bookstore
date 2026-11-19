@@ -48,3 +48,14 @@ CREATE TABLE sale_items (
     FOREIGN KEY (sale_id) REFERENCES sales(id) ON DELETE CASCADE,
     FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE RESTRICT
 );
+
+-- clearing dummy data --
+USE bookstore_db;
+
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE sale_items;
+TRUNCATE TABLE sales;
+TRUNCATE TABLE books;
+TRUNCATE TABLE categories;
+TRUNCATE TABLE users;
+SET FOREIGN_KEY_CHECKS = 1;
