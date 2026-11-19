@@ -20,6 +20,11 @@
                 <button class="nav-btn" data-tab="pos">Point of Sale (POS)</button>
                 <button class="nav-btn" data-tab="sales-history">Sales Ledger</button>
             </nav>
+            <div class="sidebar-user">
+                <p id="logged-user-name">Loading user...</p>
+                <small id="logged-user-role"></small>
+                <button class="btn btn-danger btn-sm btn-block" onclick="logout()">Sign Out</button>
+            </div>
         </aside>
 
         <!-- Main Content Area -->
@@ -88,6 +93,25 @@
                             <tbody id="top-selling-table"></tbody>
                         </table>
                     </div>
+                </div>
+
+                <div class="panel" style="margin-top: 1.5rem;">
+                    <div class="panel-header">
+                        <h3>Current Inventory Catalog</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ISBN</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-books-table"></tbody>
+                    </table>
                 </div>
             </section>
 

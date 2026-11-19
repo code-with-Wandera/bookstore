@@ -2,6 +2,22 @@ let allBooks = [];
 let categories = [];
 let cart = [];
 
+async function loadCurrentUser() {
+    const res = await fetch('/api/auth/me');
+    if (res.status === 401) {
+        window.location.href = '/login.html';
+        return;
+    }
+    const data = await res.json();
+    document.getElementById('logged-user-name').textContent = data.user.full_name;
+    document.getElementById('logged-user-role').textContent = `Role: ${data.user.role}`;
+}
+
+async function logout() {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    window.location.href = '/login.html';
+}
+
 // Navigation Tab Switching
 document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -16,13 +32,22 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
 
 // Initialize Application
 async function refreshAllData() {
-    await Promise.all([loadDashboard(), loadCategories(), loadBooks(), loadSalesHistory()]);
+    await loadCurrentUser();
+    await Promise.all([loadCategories(), loadBooks(), loadSalesHistory()]);
+    await loadDashboard();
 }
 
 // 1. Load Dashboard & Low Stock Alerts (Objective III)
 async function loadDashboard() {
     const res = await fetch('/api/dashboard');
     const data = await res.json();
+
+    if (!res.ok) {
+        console.error('Failed to load /api/dashboard:', data);
+        document.getElementById('low-stock-table').innerHTML =
+            `<tr><td colspan="5">Error loading dashboard: ${data.error || res.status}</td></tr>`;
+        return;
+    }
 
     document.getElementById('kpi-today-rev').textContent = `$${Number(data.metrics.todayRevenue).toFixed(2)}`;
     document.getElementById('kpi-today-count').textContent = `${data.metrics.todaySalesCount} transactions today`;
@@ -32,7 +57,6 @@ async function loadDashboard() {
     document.getElementById('kpi-low-stock').textContent = data.lowStockBooks.length;
     document.getElementById('alert-badge').textContent = `${data.lowStockBooks.length} Low Stock Alerts`;
 
-    // Populate Low Stock Table (< 5 remaining)
     const lowStockBody = document.getElementById('low-stock-table');
     lowStockBody.innerHTML = data.lowStockBooks.length
         ? data.lowStockBooks.map(b => `
@@ -45,7 +69,6 @@ async function loadDashboard() {
             </tr>`).join('')
         : '<tr><td colspan="5">All stock levels are healthy (5 or more items).</td></tr>';
 
-    // Populate Best-Selling Titles Table
     const topBody = document.getElementById('top-selling-table');
     topBody.innerHTML = data.topSelling.length
         ? data.topSelling.map(t => `
@@ -55,6 +78,22 @@ async function loadDashboard() {
                 <td>$${Number(t.revenue).toFixed(2)}</td>
             </tr>`).join('')
         : '<tr><td colspan="3">No sales recorded yet.</td></tr>';
+
+    // Render saved books directly on the dashboard catalog table
+    const catalogBody = document.getElementById('dashboard-books-table');
+    if (catalogBody) {
+        catalogBody.innerHTML = allBooks.length
+            ? allBooks.map(b => `
+                <tr class="${b.stock_quantity < 5 ? 'low-stock-row' : ''}">
+                    <td>${b.isbn}</td>
+                    <td><strong>${b.title}</strong></td>
+                    <td>${b.author}</td>
+                    <td>${b.category_name || 'Uncategorized'}</td>
+                    <td>$${Number(b.price).toFixed(2)}</td>
+                    <td><strong>${b.stock_quantity}</strong></td>
+                </tr>`).join('')
+            : '<tr><td colspan="6">No books in inventory yet.</td></tr>';
+    }
 }
 
 // 2. Load Categories (Objective I)
