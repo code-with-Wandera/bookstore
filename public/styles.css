@@ -1,0 +1,80 @@
+:root {
+    --primary: #1e3a8a;
+    --primary-hover: #1d4ed8;
+    --secondary: #475569;
+    --success: #15803d;
+    --danger: #b91c1c;
+    --warning-bg: #fef2f2;
+    --bg: #f1f5f9;
+    --surface: #ffffff;
+    --border: #e2e8f0;
+    --text: #0f172a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+body { background: var(--bg); color: var(--text); }
+
+.app-layout { display: flex; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar { width: 250px; background: #0f172a; color: #fff; padding: 1.5rem 1rem; display: flex; flex-direction: column; }
+.brand { padding-bottom: 1.5rem; border-bottom: 1px solid #334155; margin-bottom: 1.5rem; }
+.brand h2 span { color: #38bdf8; }
+.brand p { font-size: 0.85rem; color: #94a3b8; }
+
+.nav-btn { width: 100%; text-align: left; background: transparent; border: none; color: #cbd5e1; padding: 0.85rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.95rem; margin-bottom: 0.4rem; transition: 0.2s; }
+.nav-btn:hover, .nav-btn.active { background: var(--primary); color: #fff; font-weight: 600; }
+
+/* Main Content */
+.main-content { flex: 1; padding: 1.5rem 2rem; }
+.top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.tab-section { display: none; }
+.tab-section.active { display: block; }
+
+/* KPI Cards */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.kpi-card { background: var(--surface); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+.kpi-card h3 { font-size: 1.75rem; margin: 0.4rem 0; color: var(--primary); }
+.kpi-card.alert-card { border-left: 4px solid var(--danger); background: var(--warning-bg); }
+.kpi-card.alert-card h3 { color: var(--danger); }
+.kpi-label { font-size: 0.85rem; color: var(--secondary); font-weight: 600; text-transform: uppercase; }
+
+/* Panels & Tables */
+.dashboard-split, .pos-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 1.5rem; }
+.panel { background: var(--surface); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border); overflow-x: auto; }
+.panel h3 { margin-bottom: 1rem; font-size: 1.1rem; }
+
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
+th { background: #f8fafc; font-weight: 600; color: var(--secondary); }
+tr.low-stock-row { background-color: #fef2f2; }
+
+/* Badges */
+.badge { padding: 0.3rem 0.65rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; }
+.badge-danger { background: #fee2e2; color: var(--danger); }
+.badge-success { background: #dcfce7; color: var(--success); }
+
+/* Controls & Forms */
+.toolbar { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+input, select { width: 100%; padding: 0.6rem 0.8rem; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; }
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; margin-bottom: 0.35rem; font-size: 0.88rem; font-weight: 600; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.mb-1 { margin-bottom: 1rem; }
+
+.btn { padding: 0.6rem 1rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem; white-space: nowrap; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-secondary { background: var(--secondary); color: #fff; }
+.btn-success { background: var(--success); color: #fff; }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-sm { padding: 0.35rem 0.6rem; font-size: 0.8rem; }
+.btn-block { width: 100%; margin-top: 1rem; padding: 0.8rem; font-size: 1rem; }
+
+.cart-footer { margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid var(--border); }
+
+/* Modals */
+.modal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); align-items: center; justify-content: center; z-index: 100; }
+.modal.open { display: flex; }
+.modal-content { background: #fff; padding: 1.75rem; border-radius: 8px; width: 100%; max-width: 460px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.25rem; }
+.receipt-box { font-family: 'Courier New', monospace; }

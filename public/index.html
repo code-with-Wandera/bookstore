@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore Inventory & Sales Management System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <h2>BookStore <span>IMS</span></h2>
+                <p>Management Portal</p>
+            </div>
+            <nav>
+                <button class="nav-btn active" data-tab="dashboard">Dashboard & Alerts</button>
+                <button class="nav-btn" data-tab="inventory">Inventory & Search</button>
+                <button class="nav-btn" data-tab="pos">Point of Sale (POS)</button>
+                <button class="nav-btn" data-tab="sales-history">Sales Ledger</button>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h1 id="page-title">Dashboard & Low Stock Alerts</h1>
+                <div id="alert-badge" class="badge badge-danger">0 Low Stock Alerts</div>
+            </header>
+
+            <!-- TAB 1: DASHBOARD & LOW STOCK ALERTS (Objective III & Analytics) -->
+            <section id="dashboard" class="tab-section active">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <span class="kpi-label">Today's Revenue</span>
+                        <h3 id="kpi-today-rev">$0.00</h3>
+                        <small id="kpi-today-count">0 transactions today</small>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label">Cumulative Revenue</span>
+                        <h3 id="kpi-total-rev">$0.00</h3>
+                        <small>All recorded sales</small>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label">Unique Book Titles</span>
+                        <h3 id="kpi-total-books">0</h3>
+                        <small id="kpi-total-stock">0 total copies in store</small>
+                    </div>
+                    <div class="kpi-card alert-card">
+                        <span class="kpi-label">Low Stock Items (&lt; 5)</span>
+                        <h3 id="kpi-low-stock">0</h3>
+                        <small>Immediate restock required</small>
+                    </div>
+                </div>
+
+                <div class="dashboard-split">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Automated Low Stock Alerts (&lt; 5 Remaining)</h3>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ISBN</th>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Remaining</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="low-stock-table"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>Best-Selling Titles (Restock Intelligence)</h3>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Units Sold</th>
+                                    <th>Revenue</th>
+                                </tr>
+                            </thead>
+                            <tbody id="top-selling-table"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: INVENTORY MANAGEMENT & SEARCH (Objectives I & IV) -->
+            <section id="inventory" class="tab-section">
+                <div class="toolbar">
+                    <input type="text" id="search-input" placeholder="Search by Title, Author, or ISBN...">
+                    <button class="btn btn-secondary" onclick="openCategoryModal()">+ New Category</button>
+                    <button class="btn btn-primary" onclick="openBookModal()">+ Add New Book</button>
+                </div>
+
+                <div class="panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ISBN</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-table"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TAB 3: AUTOMATED SALES PROCESSING / POS (Objective II) -->
+            <section id="pos" class="tab-section">
+                <div class="pos-grid">
+                    <div class="panel">
+                        <h3>Select Books to Sell</h3>
+                        <input type="text" id="pos-search" placeholder="Filter available books by title or ISBN..." class="mb-1">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Book</th>
+                                    <th>Price</th>
+                                    <th>In Stock</th>
+                                    <th>Add</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pos-books-table"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="panel">
+                        <h3>Current Sale Cart</h3>
+                        <div class="form-group">
+                            <label>Customer Name (Optional)</label>
+                            <input type="text" id="customer-name" placeholder="Walk-in Customer">
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Qty</th>
+                                    <th>Subtotal</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="cart-table"></tbody>
+                        </table>
+                        <div class="cart-footer">
+                            <h3>Total: <span id="cart-total">$0.00</span></h3>
+                            <button class="btn btn-success btn-block" onclick="processSale()">Complete Sale & Update Stock</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: HISTORICAL SALES LEDGER -->
+            <section id="sales-history" class="tab-section">
+                <div class="panel">
+                    <h3>Real-Time Sales Transaction Log</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Receipt #</th>
+                                <th>Date & Time</th>
+                                <th>Customer</th>
+                                <th>Items Purchased</th>
+                                <th>Total Paid</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sales-history-table"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL: ADD / EDIT BOOK (Objective I) -->
+    <div id="book-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Add New Book</h3>
+            <form id="book-form">
+                <input type="hidden" id="book-id">
+                <div class="form-group">
+                    <label>ISBN Number</label>
+                    <input type="text" id="book-isbn" required placeholder="e.g. 978-0134685991">
+                </div>
+                <div class="form-group">
+                    <label>Book Title</label>
+                    <input type="text" id="book-title" required>
+                </div>
+                <div class="form-group">
+                    <label>Author</label>
+                    <input type="text" id="book-author" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="book-category"></select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Unit Price ($)</label>
+                        <input type="number" step="0.01" min="0" id="book-price" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Stock Quantity</label>
+                        <input type="number" min="0" id="book-stock" required>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModals()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Book</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD CATEGORY (Objective I) -->
+    <div id="category-modal" class="modal">
+        <div class="modal-content">
+            <h3>Add Book Category</h3>
+            <form id="category-form">
+                <div class="form-group">
+                    <label>Category Name</label>
+                    <input type="text" id="cat-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="cat-desc">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModals()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: RECEIPT PREVIEW (Objective II) -->
+    <div id="receipt-modal" class="modal">
+        <div class="modal-content receipt-box" id="receipt-content"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
